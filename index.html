@@ -41,9 +41,10 @@ header {
 
 .price {
     color: #ff3c3c;
+    font-weight: bold;
 }
 
-/* MODAL (ürün detay) */
+/* MODAL */
 .modal {
     display: none;
     position: fixed;
@@ -51,7 +52,7 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.85);
     justify-content: center;
     align-items: center;
 }
@@ -60,8 +61,20 @@ header {
     background: #222;
     padding: 20px;
     border-radius: 10px;
-    width: 300px;
+    width: 320px;
     text-align: center;
+}
+
+.modal-content img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.thumbs img {
+    width: 60px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 button {
@@ -80,54 +93,51 @@ button {
 
 <header>🔥 APEX FIGHT WEAR</header>
 
-<div class="products" id="productList"></div>
+<div class="products" id="list"></div>
 
-<!-- ÜRÜN DETAY -->
+<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-content">
+
     <h2 id="title"></h2>
+
+    <img id="mainImg">
+
+    <div class="thumbs" id="thumbs"></div>
+
     <p id="desc"></p>
     <p class="price" id="price"></p>
+
     <button id="buyBtn">Satın Al</button>
     <button onclick="closeModal()">Kapat</button>
+
   </div>
 </div>
 
 <script>
 
-// 🔥 ÜRÜNLERİNİZİ BURAYA EKLEYİN
 let products = [
 {
-    name: "Charles Oliveira Do Bronx unisex soft tşört",
-    price: "1199₺",
-    desc: "Sert stil, dövüş ruhu 🔥",
-    img: "https://images.printify.com/mockup/69f346a8edec310f670b968f/38191/97992/19dde61c290.jpg?s=608",
+    name: "Bronx Oliveira Tee",
+    desc: "Charles Oliveira’dan ilham alan Bronx dövüş ruhu 🔥",
+    price: "$35",
+    images: [
+        "https://images.printify.com/mockup/69f346a8edec310f670b968f/38191/97992/19dde61c290.jpg?s=608",
+        "https://images.printify.com/mockup/69f346a8edec310f670b968f/38191/97993/19dde61c290.jpg?s=608",
+        "https://images.printify.com/mockup/69f346a8edec310f670b968f/38191/100615/19dde61c290.jpg?s=608"
+    ],
     link: "https://printify.com/app/store/products/1"
-},
-{
-    name: "Street Fighter Tee",
-    price: "280₺",
-    desc: "Sokak tarzı güçlü tasarım",
-    img: "https://via.placeholder.com/200",
-    link: "PRINTIFY_LINK_2"
-},
-{
-    name: "Minimal Fight Tee",
-    price: "260₺",
-    desc: "Minimal ama güçlü",
-    img: "https://via.placeholder.com/200",
-    link: "PRINTIFY_LINK_3"
 }
 ];
 
-// Ürünleri ekrana bas
-let list = document.getElementById("productList");
+// ürünleri bas
+let list = document.getElementById("list");
 
 products.forEach(p => {
     let div = document.createElement("div");
     div.className = "product";
     div.innerHTML = `
-        <img src="${p.img}">
+        <img src="${p.images[0]}">
         <p>${p.name}</p>
         <p class="price">${p.price}</p>
     `;
@@ -135,19 +145,31 @@ products.forEach(p => {
     list.appendChild(div);
 });
 
-// Modal aç
 function openModal(p) {
     document.getElementById("modal").style.display = "flex";
+
     document.getElementById("title").innerText = p.name;
     document.getElementById("desc").innerText = p.desc;
     document.getElementById("price").innerText = p.price;
+
+    let mainImg = document.getElementById("mainImg");
+    let thumbs = document.getElementById("thumbs");
+
+    mainImg.src = p.images[0];
+    thumbs.innerHTML = "";
+
+    p.images.forEach(img => {
+        let t = document.createElement("img");
+        t.src = img;
+        t.onclick = () => mainImg.src = img;
+        thumbs.appendChild(t);
+    });
 
     document.getElementById("buyBtn").onclick = () => {
         window.location.href = p.link;
     };
 }
 
-// Modal kapat
 function closeModal() {
     document.getElementById("modal").style.display = "none";
 }
